@@ -1,12 +1,22 @@
 # SauceDemo UI automation
 
-[![UI tests](https://github.com/Potucky/Autotest-15may/actions/workflows/ui-tests.yml/badge.svg)](https://github.com/Potucky/Autotest-15may/actions/workflows/ui-tests.yml)
+[![UI tests](https://github.com/Potucky/selenium-pytest-page-object/actions/workflows/ui-tests.yml/badge.svg)](https://github.com/Potucky/selenium-pytest-page-object/actions/workflows/ui-tests.yml)
 
 Selenium + pytest UI framework for the public [SauceDemo](https://www.saucedemo.com) store. It uses the Page Object Model, explicit waits, and a checkout check that reconciles line prices, tax, and the order total.
 
 This is a personal portfolio demo for QA Automation, SDET, and Data QA roles. It is not employer code and it is not a production suite.
 
-The badge follows the default branch of `Potucky/Autotest-15may`. If the repository is renamed, update the badge URL in this file.
+[Live test report](https://potucky.github.io/selenium-pytest-page-object/)
+
+The badge tracks the default branch of `Potucky/selenium-pytest-page-object`. The live report is published on each push to `main` when GitHub Pages uses GitHub Actions as its source.
+
+## What this project demonstrates
+
+- **Page Object Model.** Selenium 4 page objects for login, inventory, cart, and checkout own the locators and actions. Tests own the assertions.
+- **Functional UI checks, including negative cases.** Valid login, missing fields, a bad password, the locked-out user, logout, name and price sorting, and cart updates. Each UI test gets its own browser and waits for the screen to change.
+- **On-screen price reconciliation.** The checkout test reads item prices from the inventory and checks those same amounts, 8% tax rounded half up to the cent, and the order total on the overview.
+- **CI test reports.** GitHub Actions runs the suite in headless Chrome and stores a self-contained HTML report, JUnit XML, and a screenshot when a test fails. Pushes to `main` also publish the HTML report.
+- **Configurable runs.** Defaults live in `config/settings.yaml` and are overridden by environment variables. Separate fast tests cover the settings loader, price parser, tax rounding, and locators without opening a browser.
 
 ## What it demonstrates
 
@@ -38,6 +48,7 @@ framework/                    settings, Chrome driver, price parsing, demo users
 pages/                        page objects
 tests/                        UI scenarios plus fast checks for config, prices, locators
 .github/workflows/ui-tests.yml
+.github/workflows/pages.yml   publish the HTML report on pushes to main
 reports/                      generated HTML and JUnit XML (not committed)
 screenshots/                  PNG saved when a test fails (not committed)
 ```
@@ -91,6 +102,8 @@ Implicit waits are left at 0. Tests wait for a visible element, a URL, or a cart
 
 Open the HTML file in a browser. The environment block shows the base URL, browser, and headless flag. When a test fails during the test body, the report embeds a screenshot and the same PNG is saved under `screenshots/`. The sample below is a passing run, so the Links column is empty.
 
+The same HTML report is published from `main`: [Live test report](https://potucky.github.io/selenium-pytest-page-object/).
+
 ## Sample output
 
 ```text
@@ -135,6 +148,8 @@ The fast tests (no browser) cover the settings loader, the price parser, the tax
 
 `.github/workflows/ui-tests.yml` runs on pushes to `main`, on pull requests into `main`, and on manual dispatch. The job installs the pinned requirements, runs `python -m pytest` with `HEADLESS=true`, and always uploads `reports/` and `screenshots/` as the `test-report` artifact (kept for 14 days).
 
+`.github/workflows/pages.yml` runs on pushes to `main` and on manual dispatch. It runs the same suite, writes an `index.html` that links to the HTML report, and deploys both with `actions/upload-pages-artifact` and `actions/deploy-pages`. The site is [https://potucky.github.io/selenium-pytest-page-object/](https://potucky.github.io/selenium-pytest-page-object/). That address serves the report after the workflow succeeds. The repository Pages source has to be GitHub Actions (Settings → Pages).
+
 ## Demo accounts
 
 SauceDemo prints these accounts on its login page. They are public demo credentials, not secrets, and nothing else is stored in this repo.
@@ -146,4 +161,4 @@ SauceDemo prints these accounts on its login page. They are public demo credenti
 
 ## Author
 
-Vasyl Popovich · [Potucky](https://github.com/Potucky)
+Vasyl Popovich, QA Automation Engineer, Miami, FL. GitHub: https://github.com/Potucky
